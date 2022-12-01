@@ -1,0 +1,6 @@
+
+
+// Main application
+fn main() {
+    println!("Hello, world!");
+}
