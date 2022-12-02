@@ -26,7 +26,16 @@ fn main() {
                     calories::count();
                 }
                 2 => {
-                    rps::strategy();
+                    if args.len() == 3 {
+                        match args[2].as_str() {
+                            "outcome" => rps::strategy(rps::ColumnOption::Outcome),
+                            "me" => rps::strategy(rps::ColumnOption::Me),
+                            _ => rps::strategy(rps::ColumnOption::Me)
+                        }
+                    } else {
+                        rps::strategy(rps::ColumnOption::Me);
+                    }
+
                 }
                 _ => {
                     println!("Values must be between 1 and 25");

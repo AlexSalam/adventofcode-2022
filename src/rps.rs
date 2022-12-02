@@ -1,109 +1,168 @@
 use crate::shared::read_lines;
 use std::collections::HashMap;
 
-enum BattleOutcome {
+#[derive(Debug, PartialEq, Eq, Hash)]
+enum Outcome {
     Win,
     Loss,
-    Draw,
-    Unknown
+    Draw
 }
 
-pub fn strategy()
+#[derive(Debug, PartialEq, Eq, Hash)]
+enum Selection {
+    Rock,
+    Paper,
+    Scissors
+}
+
+pub enum ColumnOption {
+    Outcome,
+    Me
+}
+
+pub fn strategy(option: ColumnOption)
 {
-    // Out point Total
     let mut total = 0;
 
-    // Store points for our choice
-    let mut choice_points = HashMap::new();
-    choice_points.insert('X', 1);
-    choice_points.insert('Y', 2);
-    choice_points.insert('Z', 3);
+    // Opponent picks
+    let mut selection_map: HashMap<char, Selection> = HashMap::new();
+    selection_map.insert('A', Selection::Rock);
+    selection_map.insert('B', Selection::Paper);
+    selection_map.insert('C', Selection::Scissors);
+    selection_map.insert('X', Selection::Rock);
+    selection_map.insert('Y', Selection::Paper);
+    selection_map.insert('Z', Selection::Scissors);
 
+    let mut outcome_map: HashMap<char, Outcome> = HashMap::new();
+    outcome_map.insert('X', Outcome::Loss);
+    outcome_map.insert('Y', Outcome::Draw);
+    outcome_map.insert('Z', Outcome::Win);
+    // Scoring
+    let mut scores: HashMap<Selection, i32> = HashMap::new();
+    scores.insert(Selection::Rock, 1);
+    scores.insert(Selection::Paper, 2);
+    scores.insert(Selection::Scissors, 3);
 
     if let Ok(lines) = read_lines("./src/data/2/data.txt") {
+
         for line in lines {
             if let Ok(battle) = line {
                 let char_vec: Vec<char> = battle.chars().collect();
-                match resolve_battle(char_vec[0], char_vec[2]) {
-                    BattleOutcome::Win => {
+                let opponent_selection = &selection_map[&char_vec[0]];
+                let my_selection = match option {
+                    ColumnOption::Outcome => {
+                        &action(&opponent_selection, &outcome_map[&char_vec[2]])
+                    }
+                    ColumnOption::Me => {
+                        &selection_map[&char_vec[2]]
+                    }
+                };
+                match compare(&opponent_selection, &my_selection) {
+                    Outcome::Win => {
                         total = total + 6;
                     },
-                    BattleOutcome::Loss => {
-
-                    },
-                    BattleOutcome::Draw => {
-                        total = total + 3
-                    },
-                    BattleOutcome::Unknown => {
-                        continue;
+                    Outcome::Loss => {
+                        total = total + 0;
+                    }
+                    Outcome::Draw => {
+                        total = total + 3;
                     }
                 }
-                // Append our choice score
-                if let Some(choice_score) = choice_points.get(&char_vec[2]) {
-                    total = total + choice_score;
-                }
+                total = total + scores[&my_selection];
             }
         }
         println!("Total score: {total}");
     }
 }
 
-// ROCK: A, X
-// Paper B, Y
-// Scissors C, Z
-
-// get the outcome of the duel
-fn resolve_battle(them: char, me: char) -> BattleOutcome
+// Compare and return the result
+fn compare(opponent: &Selection, me: &Selection) -> Outcome
 {
-    match me {
-        'X' => {
-            match them {
-                'A' => {
-                    return BattleOutcome::Draw
+    match opponent {
+        Selection::Rock => {
+            match me {
+                Selection::Rock => {
+                    Outcome::Draw
                 },
-                'B' => {
-                    return BattleOutcome::Loss
+                Selection::Paper => {
+                    Outcome::Win
                 },
-                'C' => {
-                    return BattleOutcome::Win
+                Selection::Scissors => {
+                    Outcome::Loss
                 },
-                _ => {
-                    return BattleOutcome::Unknown
+            }
+        },
+        Selection::Paper => {
+            match me {
+                Selection::Rock => {
+                    Outcome::Loss
+                },
+                Selection::Paper => {
+                    Outcome::Draw
+                },
+                Selection::Scissors => {
+                    Outcome::Win
                 }
             }
         },
-        'Y' => {
-            match them {
-                'A' => {
-                    return BattleOutcome::Win
+        Selection::Scissors => {
+            match me {
+                Selection::Rock => {
+                    Outcome::Win
                 },
-                'B' => {
-                     return BattleOutcome::Draw
+                Selection::Paper => {
+                    Outcome::Loss
                 },
-                'C' => {
-                    return BattleOutcome::Loss
+                Selection::Scissors => {
+                    Outcome::Draw
+                }
+            }
+        }
+    }
+}
+
+// Take the result and outcome then predict my action
+fn action<'a>(opponent: &Selection, outcome: &Outcome) -> &'a Selection
+{
+    match opponent {
+        Selection::Rock => {
+            match outcome {
+                Outcome::Draw => {
+                    &Selection::Rock
                 },
-                _ => {
-                    return BattleOutcome::Unknown
-                }            }
+                Outcome::Win => {
+                    &Selection::Paper
+                },
+                Outcome::Loss => {
+                    &Selection::Scissors
+                },
+            }
         },
-        'Z' => {
-            match them {
-                'A' => {
-                     return BattleOutcome::Loss
+        Selection::Paper => {
+            match outcome {
+                Outcome::Draw => {
+                    &Selection::Paper
                 },
-                'B' => {
-                     return BattleOutcome::Win
+                Outcome::Win => {
+                    &Selection::Scissors
                 },
-                'C' => {
-                     return BattleOutcome::Draw
-                 },
-                 _ => {
-                     return BattleOutcome::Unknown
-                 }            }
+                Outcome::Loss => {
+                    &Selection::Rock
+                },
+            }
         },
-        _ => {
-            return BattleOutcome::Unknown
+        Selection::Scissors => {
+            match outcome {
+                Outcome::Draw => {
+                    &Selection::Scissors
+                },
+                Outcome::Win => {
+                    &Selection::Rock
+                },
+                Outcome::Loss => {
+                    &Selection::Paper
+                },
+            }
         }
     }
 }
