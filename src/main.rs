@@ -5,6 +5,7 @@ pub mod shared;
 
 // Puzzle modules
 pub mod calories;
+pub mod rps;
 
 // Main application
 fn main() {
@@ -23,6 +24,9 @@ fn main() {
             match day {
                 1 => {
                     calories::count();
+                }
+                2 => {
+                    rps::strategy();
                 }
                 _ => {
                     println!("Values must be between 1 and 25");
