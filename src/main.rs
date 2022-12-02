@@ -1,5 +1,8 @@
 use std::env;
 
+// Shared modules
+pub mod shared;
+
 // Puzzle modules
 pub mod calories;
 
