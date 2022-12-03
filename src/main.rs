@@ -6,6 +6,7 @@ pub mod shared;
 // Puzzle modules
 pub mod calories;
 pub mod rps;
+pub mod backpacks;
 
 // Main application
 fn main() {
@@ -36,6 +37,9 @@ fn main() {
                         rps::strategy(rps::ColumnOption::Me);
                     }
 
+                }
+                3 => {
+                    backpacks::count_duplicate_priorities();
                 }
                 _ => {
                     println!("Values must be between 1 and 25");
