@@ -30,14 +30,12 @@ fn get_priority(item: &char) -> i32
     for c in 'a' ..= 'z' {
         count = count + 1;
         if c == *item {
-            println!("{item}:{count}");
             return count;
         }
     }
     for c in 'A' ..= 'Z' {
         count = count + 1;
         if c == *item {
-            println!("{item}:{count}");
             return count;
         }
     }
