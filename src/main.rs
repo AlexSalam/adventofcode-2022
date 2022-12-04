@@ -7,6 +7,7 @@ pub mod shared;
 pub mod calories;
 pub mod rps;
 pub mod backpacks;
+pub mod ranges;
 
 // Main application
 fn main() {
@@ -40,6 +41,9 @@ fn main() {
                 }
                 3 => {
                     backpacks::count_duplicate_priorities();
+                }
+                4 => {
+                    ranges::check_eclipses();
                 }
                 _ => {
                     println!("Values must be between 1 and 25");
