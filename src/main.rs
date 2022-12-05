@@ -8,6 +8,7 @@ pub mod calories;
 pub mod rps;
 pub mod backpacks;
 pub mod ranges;
+pub mod cargo;
 
 // Main application
 fn main() {
@@ -44,6 +45,9 @@ fn main() {
                 }
                 4 => {
                     ranges::check_eclipses();
+                }
+                5 => {
+                    cargo::top_of_stack();
                 }
                 _ => {
                     println!("Values must be between 1 and 25");
