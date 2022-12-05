@@ -25,9 +25,7 @@ fn main() {
             println!("Doing puzzle for day: {}", day);
             // Run the module method for this puzzle
             match day {
-                1 => {
-                    calories::count();
-                }
+                1 => calories::count(),
                 2 => {
                     if args.len() == 3 {
                         match args[2].as_str() {
@@ -40,18 +38,10 @@ fn main() {
                     }
 
                 }
-                3 => {
-                    backpacks::count_duplicate_priorities();
-                }
-                4 => {
-                    ranges::check_eclipses();
-                }
-                5 => {
-                    cargo::top_of_stack();
-                }
-                _ => {
-                    println!("Values must be between 1 and 25");
-                }
+                3 => backpacks::count_duplicate_priorities(),
+                4 => ranges::check_eclipses(),
+                5 => cargo::top_of_stack(),
+                _ => println!("Values must be between 1 and 25"),
             }
         }
     }
