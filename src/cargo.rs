@@ -11,7 +11,7 @@ pub fn top_of_stack()
                 let quantity = halves[0].split(" ").collect::<Vec<&str>>()[1].parse::<usize>().unwrap();
                 let from = halves[1].split(" to ").collect::<Vec<&str>>()[0].parse::<usize>().unwrap();
                 let to = halves[1].split(" to ").collect::<Vec<&str>>()[1].parse::<usize>().unwrap();
-                state = move_crate(state, quantity, from, to);
+                state = move_crate_preserve_order(state, quantity, from, to);
             }
         }
         print_top_crates(state);
@@ -44,6 +44,25 @@ fn move_crate(mut state: [Vec<char>; 9], quantity: usize, from: usize, to: usize
     state
 }
 
+fn move_crate_preserve_order(mut state: [Vec<char>; 9], quantity: usize, from: usize, to: usize) -> [Vec<char>; 9]
+{
+    let mut i = 0;
+    let mut buffer = vec![];
+
+    while i < quantity {
+        let cargo = state[from - 1].pop();
+        match cargo {
+            Some(item) => {
+                buffer.push(item);
+            }
+            None => ()
+        }
+        i = i + 1;
+    }
+    buffer.reverse();
+    state[to - 1].append(&mut buffer);
+    state
+}
 
 fn get_initial_state() -> [Vec<char>; 9]
 {
