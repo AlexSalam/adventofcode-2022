@@ -28,7 +28,7 @@ fn print_top_crates(state: [Vec<char>; 9])
     println!("Top crates: {string_output}");
 }
 
-fn move_crate(mut state: [Vec<char>; 9], quantity: usize, from: usize, to: usize) -> [Vec<char>; 9]
+fn _move_crate(mut state: [Vec<char>; 9], quantity: usize, from: usize, to: usize) -> [Vec<char>; 9]
 {
     let mut i = 0;
     while i < quantity {

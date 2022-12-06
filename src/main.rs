@@ -9,6 +9,7 @@ pub mod rps;
 pub mod backpacks;
 pub mod ranges;
 pub mod cargo;
+pub mod transmissions;
 
 // Main application
 fn main() {
@@ -41,6 +42,7 @@ fn main() {
                 3 => backpacks::count_duplicate_priorities(),
                 4 => ranges::check_eclipses(),
                 5 => cargo::top_of_stack(),
+                6 => transmissions::get_first_marker(),
                 _ => println!("Values must be between 1 and 25"),
             }
         }
