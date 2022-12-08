@@ -11,6 +11,7 @@ pub mod ranges;
 pub mod cargo;
 pub mod transmissions;
 pub mod filesystem;
+pub mod treepatch;
 
 // Main application
 fn main() {
@@ -45,6 +46,7 @@ fn main() {
                 5 => cargo::top_of_stack(),
                 6 => transmissions::get_first_marker(),
                 7 => filesystem::run(),
+                8 => treepatch::visible(),
                 _ => println!("Values must be between 1 and 25"),
             }
         }
