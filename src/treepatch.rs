@@ -71,7 +71,7 @@ impl Forest {
         }
     }
 
-    pub fn count_maximum_scenic_score(&self)
+    pub fn count_maximum_scenic_score(&mut self)
     {
         self.visible_trees = 0;
         // Top left
@@ -80,11 +80,12 @@ impl Forest {
             y: 0
         };
 
+        let mut score = 0;
         loop {
-            if self.current_tree_scenic_score() {
-                self.visible_trees = self.visible_trees + 1;
+            let this_score = self.current_tree_scenic_score();
+            if this_score > score {
+                score = this_score;
             }
-            // Move one step right and check if we hit a boundary
             if self.go_right() {
                 continue;
             } else {
@@ -96,6 +97,7 @@ impl Forest {
                 }
             }
         }
+        println!("Max scenic score: {score}");
     }
 
     fn go_right(&mut self) -> bool
@@ -134,16 +136,21 @@ impl Forest {
         *self.trees.get(&self.current).unwrap()
     }
 
+    fn current_tree_scenic_score(&self) -> i32
+    {
+        self.check_scenic_score_in_direction(Direction::North) * self.check_scenic_score_in_direction(Direction::East) * self.check_scenic_score_in_direction(Direction::South) * self.check_scenic_score_in_direction(Direction::West)
+    }
+
     fn current_tree_is_visible(&self) -> bool
     {
         self.check_visibility_in_direction(Direction::North) || self.check_visibility_in_direction(Direction::East) || self.check_visibility_in_direction(Direction::South) || self.check_visibility_in_direction(Direction::West)
     }
 
-    fn check_scenic_score_in_direction(&self, direction: Direction) -> bool
+    fn check_scenic_score_in_direction(&self, direction: Direction) -> i32
     {
         let mut peek_point = self.current;
-        let mut at_edge = false;
         let tree = self.get_current_tree();
+        let mut distance = 0;
         println!("");
         println!("From tree of height: {} point ({},{})", tree, self.current.x, self.current.y);
         match direction {
@@ -156,8 +163,9 @@ impl Forest {
                     match self.trees.get(&peek_point) {
                         Some(peek_tree) => {
                             println!("Tree of height: {} found at ({},{})", peek_tree, peek_point.x, peek_point.y);
+                            distance = distance + 1;
                             if peek_tree >= &tree {
-                                return false;
+                                return distance;
                             }
                         },
                         None => {
@@ -165,7 +173,7 @@ impl Forest {
                         }
                     }
                 }
-                return true;
+                return distance;
             },
             // X + 1
             Direction::East => {
@@ -176,8 +184,9 @@ impl Forest {
                     match self.trees.get(&peek_point) {
                         Some(peek_tree) => {
                             println!("Tree of height: {} found at ({},{})", peek_tree, peek_point.x, peek_point.y);
+                            distance = distance + 1;
                             if peek_tree >= &tree {
-                                return false;
+                                return distance;
                             }
                         },
                         None => {
@@ -185,7 +194,7 @@ impl Forest {
                         }
                     }
                 }
-                return true;
+                return distance;
             },
             // Y - 1
             Direction::South => {
@@ -199,8 +208,9 @@ impl Forest {
                     match self.trees.get(&peek_point) {
                         Some(peek_tree) => {
                             println!("Tree of height: {} found at ({},{})", peek_tree, peek_point.x, peek_point.y);
+                            distance = distance + 1;
                             if peek_tree >= &tree {
-                                return false;
+                                return distance;
                             }
                         },
                         None => {
@@ -208,7 +218,7 @@ impl Forest {
                         }
                     }
                 }
-                return true;
+                return distance;
             },
             // X - 1
             Direction::West => {
@@ -222,8 +232,9 @@ impl Forest {
                     match self.trees.get(&peek_point) {
                         Some(peek_tree) => {
                             println!("Tree of height: {} found at ({},{})", peek_tree, peek_point.x, peek_point.y);
+                            distance = distance + 1;
                             if peek_tree >= &tree {
-                                return false;
+                                return distance;
                             }
                         },
                         None => {
@@ -231,7 +242,7 @@ impl Forest {
                         }
                     }
                 }
-                return true;
+                return distance;
             }
         };
     }
@@ -346,6 +357,7 @@ pub fn visible()
     };
     forest.count_visible_trees();
     println!("There are {} visible trees.", forest.visible_trees);
+    forest.count_maximum_scenic_score();
 }
 
 fn get_trees() -> HashMap<Point, i8>
