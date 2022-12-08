@@ -69,7 +69,33 @@ impl Forest {
                 }
             }
         }
+    }
 
+    pub fn count_maximum_scenic_score(&self)
+    {
+        self.visible_trees = 0;
+        // Top left
+        self.current = Point {
+            x: 0,
+            y: 0
+        };
+
+        loop {
+            if self.current_tree_scenic_score() {
+                self.visible_trees = self.visible_trees + 1;
+            }
+            // Move one step right and check if we hit a boundary
+            if self.go_right() {
+                continue;
+            } else {
+                // We hit a boundary
+                if self.next_row() {
+                    continue;
+                } else {
+                    break;
+                }
+            }
+        }
     }
 
     fn go_right(&mut self) -> bool
@@ -111,6 +137,103 @@ impl Forest {
     fn current_tree_is_visible(&self) -> bool
     {
         self.check_visibility_in_direction(Direction::North) || self.check_visibility_in_direction(Direction::East) || self.check_visibility_in_direction(Direction::South) || self.check_visibility_in_direction(Direction::West)
+    }
+
+    fn check_scenic_score_in_direction(&self, direction: Direction) -> bool
+    {
+        let mut peek_point = self.current;
+        let mut at_edge = false;
+        let tree = self.get_current_tree();
+        println!("");
+        println!("From tree of height: {} point ({},{})", tree, self.current.x, self.current.y);
+        match direction {
+            // Y + 1
+            Direction::North => {
+                println!("Looking north!");
+                loop {
+                    peek_point.increment_y();
+                    println!("Checking point ({},{})", peek_point.x, peek_point.y);
+                    match self.trees.get(&peek_point) {
+                        Some(peek_tree) => {
+                            println!("Tree of height: {} found at ({},{})", peek_tree, peek_point.x, peek_point.y);
+                            if peek_tree >= &tree {
+                                return false;
+                            }
+                        },
+                        None => {
+                            break;
+                        }
+                    }
+                }
+                return true;
+            },
+            // X + 1
+            Direction::East => {
+                println!("Looking east!");
+                loop {
+                    peek_point.increment_x();
+                    println!("Checking point ({},{})", peek_point.x, peek_point.y);
+                    match self.trees.get(&peek_point) {
+                        Some(peek_tree) => {
+                            println!("Tree of height: {} found at ({},{})", peek_tree, peek_point.x, peek_point.y);
+                            if peek_tree >= &tree {
+                                return false;
+                            }
+                        },
+                        None => {
+                            break;
+                        }
+                    }
+                }
+                return true;
+            },
+            // Y - 1
+            Direction::South => {
+                println!("Looking south!");
+                loop {
+                    if peek_point.y == 0 {
+                        break;
+                    }
+                    peek_point.decrement_y();
+                    println!("Checking point ({},{})", peek_point.x, peek_point.y);
+                    match self.trees.get(&peek_point) {
+                        Some(peek_tree) => {
+                            println!("Tree of height: {} found at ({},{})", peek_tree, peek_point.x, peek_point.y);
+                            if peek_tree >= &tree {
+                                return false;
+                            }
+                        },
+                        None => {
+                            break;
+                        }
+                    }
+                }
+                return true;
+            },
+            // X - 1
+            Direction::West => {
+                println!("Looking west!");
+                loop {
+                    if peek_point.x == 0 {
+                        break;
+                    }
+                    peek_point.decrement_x();
+                    println!("Checking point ({},{})", peek_point.x, peek_point.y);
+                    match self.trees.get(&peek_point) {
+                        Some(peek_tree) => {
+                            println!("Tree of height: {} found at ({},{})", peek_tree, peek_point.x, peek_point.y);
+                            if peek_tree >= &tree {
+                                return false;
+                            }
+                        },
+                        None => {
+                            break;
+                        }
+                    }
+                }
+                return true;
+            }
+        };
     }
 
     fn check_visibility_in_direction(&self, direction: Direction) -> bool
@@ -159,7 +282,8 @@ impl Forest {
                         }
                     }
                 }
-                return true;            },
+                return true;
+            },
             // Y - 1
             Direction::South => {
                 println!("Looking south!");
@@ -181,7 +305,8 @@ impl Forest {
                         }
                     }
                 }
-                return true;            },
+                return true;
+            },
             // X - 1
             Direction::West => {
                 println!("Looking west!");
@@ -203,7 +328,8 @@ impl Forest {
                         }
                     }
                 }
-                return true;            }
+                return true;
+            }
         };
     }
 }
