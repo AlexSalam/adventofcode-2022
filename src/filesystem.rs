@@ -122,17 +122,33 @@ pub fn run()
     let output = top.crawl_for_dirs(dirs);
     dbg!(&output.len());
 
+    // Part 1
     // dbg!(&output);
     let mut total = 0;
     let mut count = 0;
-    for item in output {
+    for item in &output {
         if item.1 <= 100000 && item.0 != "/" {
             count = count + 1;
-            dbg!(&item);
             total = total + item.1;
         }
     }
     dbg!(total);
+
+
+    // Part 2
+    let max: i32 = 70000000;
+    let required: i32 = 30000000;
+    let unused: i32 = max - top.get_total();
+    println!("Unused space: {unused}");
+    let mut smallest: i32 = top.get_total();
+    for item in &output {
+        if item.1 + unused >= required {
+            if item.1 < smallest {
+                smallest = item.1;
+            }
+        }
+    }
+    println!("Smallest dir: {smallest}");
 }
 
 fn read() -> HashMap<String, TreeEntry>
