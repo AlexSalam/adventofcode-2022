@@ -105,7 +105,7 @@ impl Forest {
         let mut peek_point = self.current;
         peek_point.increment_x();
         match self.trees.get(&peek_point) {
-            Some(peek_tree) => {
+            Some(..) => {
                 self.current = peek_point;
                 return true;
             },
@@ -121,7 +121,7 @@ impl Forest {
         peek_point.increment_y();
         peek_point.x = 0;
         match self.trees.get(&peek_point) {
-            Some(peek_tree) => {
+            Some(..) => {
                 self.current = peek_point;
                 return true;
             },
@@ -250,7 +250,6 @@ impl Forest {
     fn check_visibility_in_direction(&self, direction: Direction) -> bool
     {
         let mut peek_point = self.current;
-        let mut at_edge = false;
         let tree = self.get_current_tree();
         println!("");
         println!("From tree of height: {} point ({},{})", tree, self.current.x, self.current.y);
