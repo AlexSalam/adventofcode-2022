@@ -48,7 +48,10 @@ fn main() {
                 6 => transmissions::get_first_marker(),
                 7 => filesystem::run(),
                 8 => treepatch::visible(),
-                9 => rope::visitations(),
+                9 => {
+                    rope::visitations();
+                    rope::chain_visitations();
+                },
                 _ => println!("Values must be between 1 and 25"),
             }
         }
