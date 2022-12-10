@@ -13,6 +13,7 @@ pub mod transmissions;
 pub mod filesystem;
 pub mod treepatch;
 pub mod rope;
+pub mod cpu;
 
 // Main application
 fn main() {
@@ -52,6 +53,10 @@ fn main() {
                     rope::visitations();
                     rope::chain_visitations();
                 },
+                10 => {
+                    // cpu::sum_signals();
+                    cpu::draw();
+                }
                 _ => println!("Values must be between 1 and 25"),
             }
         }

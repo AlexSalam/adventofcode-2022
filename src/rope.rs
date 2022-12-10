@@ -32,25 +32,18 @@ impl Grid {
     pub fn calc_chain_movements(&mut self, moves: Vec<(Direction, i8)>)
     {
         println!("Starting head: ({},{}) and tail: ({},{})", self.knots[0].0, self.knots[0].1, self.knots[9].0, self.knots[9].1);
-        let mut count = 0;
         for instruction in moves.iter() {
             println!("Doing {:?} {}", instruction.0, instruction.1);
             self.do_chain_move(instruction.0, instruction.1);
-            // count = count + 1;
-            // if count > 5 {
-            //     exit(0);
-            // }
         }
         println!("Total unique tail visitations: {}", self.tail_visitations.len());
     }
 
-    // Attempt 11342 too high
-    // Attempt 11274 too high
     fn do_chain_move(&mut self, direction: Direction, distance: i8)
     {
         let mut count = 0;
         while count < distance {
-            let mut knots: [(i32, i32); 10] = self.knots.clone();
+            let knots: [(i32, i32); 10] = self.knots.clone();
             match direction {
                 Direction::Up => {
                     self.knots[0].1 = self.knots[0].1 + 1;
@@ -214,7 +207,7 @@ impl Grid {
 pub fn read_moves() -> Vec<(Direction, i8)>
 {
     let mut moves: Vec<(Direction, i8)> = Vec::new();
-    if let Ok(lines) = read_lines("./src/data/9/data.txt") {
+    if let Ok(lines) = read_lines("./src/data/9/test.txt") {
         for line in lines {
             if let Ok(instruction) = line {
                 let move_parts: Vec<&str> = instruction.split(" ").collect();
@@ -232,8 +225,6 @@ pub fn read_moves() -> Vec<(Direction, i8)>
     moves
 }
 
-// Attempt1 1834: too low
-
 pub fn visitations()
 {
     let mut grid: Grid = Grid {
@@ -244,7 +235,6 @@ pub fn visitations()
     };
     let moves: Vec<(Direction, i8)> = read_moves();
     grid.calc_tail_visitations(moves);
-    // dbg!(grid.tail_visitations);
 }
 
 pub fn chain_visitations()
