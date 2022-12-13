@@ -1,5 +1,7 @@
 use std::env;
 
+extern crate pathfinding;
+
 // Shared modules
 pub mod shared;
 
@@ -14,6 +16,8 @@ pub mod filesystem;
 pub mod treepatch;
 pub mod rope;
 pub mod cpu;
+pub mod monkeys;
+pub mod hills;
 
 // Main application
 fn main() {
@@ -56,7 +60,9 @@ fn main() {
                 10 => {
                     // cpu::sum_signals();
                     cpu::draw();
-                }
+                },
+                11 => monkeys::business(),
+                12 => hills::route(),
                 _ => println!("Values must be between 1 and 25"),
             }
         }
